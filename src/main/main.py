@@ -1,44 +1,25 @@
-import io, json
-from constants import FEEDS_FILENAME, LABELS_FILENAME, TRAIN_UPPER_LIMIT_DATA, FEEDS_100_FILENAME
-
-def decodeFile(file):
-    buffer = ""
-    dec = json.JSONDecoder()
-    for line in file:
-        buffer = buffer.strip(" \n\r\t") + line.strip(" \n\r\t")
-        while(True):
-            try:
-                r = dec.raw_decode(buffer)
-            except:
-                break
-            yield r[0]
-            buffer = buffer[r[1]:].strip(" \n\r\t")
-
-def read_resource_from_file(train_user_ids, train_user_tweets):
-    resource_as_file = io.open(FEEDS_FILENAME, mode="r", encoding="utf8")
-    count = 0
-
-    for line in decodeFile(resource_as_file):
-        train_user_ids.append(line['id'])
-
-        user_tweets = ""
-        for tweet in line['text']:
-            if tweet.isascii():
-                user_tweets = user_tweets + tweet
-        train_user_tweets.append(user_tweets)
-
-        count += 1
-        if count == TRAIN_UPPER_LIMIT_DATA:
-            break
-    resource_as_file.close()
+from constants import FEEDS_FILENAME, TRAIN_UPPER_LIMIT_DATA, TEST_UPPER_LIMIT_DATA
+from file_reader import read_resource_from_file
+import naive_bayes as nb, support_vector_machine as svm
 
 
 def main():
     train_user_ids = []
     train_user_tweets = []
-    read_resource_from_file(train_user_ids, train_user_tweets)
-    print(train_user_ids)
-    print(train_user_tweets)
+    print("Reading train data")
+    read_resource_from_file(FEEDS_FILENAME, train_user_ids, train_user_tweets, 0, TRAIN_UPPER_LIMIT_DATA)
+
+    test_user_ids = []
+    test_user_tweets = []
+    print("Reading test data")
+    read_resource_from_file(FEEDS_FILENAME, test_user_ids, test_user_tweets, TRAIN_UPPER_LIMIT_DATA, TEST_UPPER_LIMIT_DATA)
+
+    # traits: birthyear, gender, occupation, fame
+    print("Starting NB classifier")
+    nb.classify(train_user_ids, train_user_tweets, test_user_ids, test_user_tweets, 'occupation')
+
+    print("Starting SVM classifier")
+    svm.classify(train_user_ids, train_user_tweets, test_user_ids, test_user_tweets, 'gender')
 
 if __name__ == "__main__":
     main()
