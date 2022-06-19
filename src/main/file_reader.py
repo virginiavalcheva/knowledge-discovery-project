@@ -13,7 +13,9 @@ def decodeFile(file):
             yield r[0]
             buffer = buffer[r[1]:].strip(" \n\r\t")
 
-def read_resource_from_file(filename, user_ids_data, user_tweets_data, lower_limit, upper_limit):
+def read_resource_from_file(filename, lower_limit, upper_limit):
+    user_ids_data = []
+    user_tweets_data = []
     resource_as_file = io.open(filename, mode="r", encoding="utf8")
     count = lower_limit
 
@@ -31,3 +33,4 @@ def read_resource_from_file(filename, user_ids_data, user_tweets_data, lower_lim
             break
 
     resource_as_file.close()
+    return user_ids_data, user_tweets_data

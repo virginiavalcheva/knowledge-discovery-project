@@ -23,4 +23,4 @@ def classify(train_user_ids, train_user_tweets, test_user_ids, test_user_tweets,
 
     print("Predicting")
     predicted_trait = classifier.predict(test_data_tfidf)
-    print("Occupation: ", np.mean(predicted_trait == trait_test))
+    print("Accuracy: ", np.mean(predicted_trait == trait_test))
