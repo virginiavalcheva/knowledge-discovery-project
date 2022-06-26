@@ -1,5 +1,4 @@
-import io, numpy as np
-from sklearn import svm
+from sklearn.ensemble import RandomForestClassifier
 from data_processor import vectorize, label
 
 def classify(train_user_ids, train_user_tweets, test_user_ids, test_user_tweets, trait):
@@ -16,7 +15,7 @@ def classify(train_user_ids, train_user_tweets, test_user_ids, test_user_tweets,
     train_data_tfidf, test_data_tfidf = vectorize(train_user_tweets, test_user_tweets)
 
     print("Starting classifier")
-    classifier = svm.SVC()
+    classifier = RandomForestClassifier(max_depth=2, random_state=0)
     classifier.fit(train_data_tfidf, trait_train)
 
     print("Predicting")

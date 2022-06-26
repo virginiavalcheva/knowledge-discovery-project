@@ -59,6 +59,7 @@ def showPrecisionRecallCurve(test_data_ids, predicted_data_ids):
     plt.show()
 
 def printMetrics(test_data_ids, predicted_data_ids):
+    print("Accuracy: ", accuracy_score(test_data_ids, predicted_data_ids))
     print("Precision Score: ", precision_score(test_data_ids, predicted_data_ids, average="macro"))
     print("Recall Score: ", recall_score(test_data_ids, predicted_data_ids, average="macro"))
     score = f1_score(test_data_ids, predicted_data_ids, average="macro")
