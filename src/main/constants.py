@@ -1,4 +1,8 @@
 FEEDS_FILENAME = "../resources/feeds.ndjson"
 LABELS_FILENAME = "../resources/labels.ndjson"
-TRAIN_UPPER_LIMIT_DATA = 800 #27069 Train data - 80%
-TEST_UPPER_LIMIT_DATA = 1000 #33835 Test data - 20%
+TRAIN_UPPER_LIMIT_DATA = 10 #27069 Train data - 80%
+TEST_UPPER_LIMIT_DATA = 33835  #33835 Test data - 20%
+MAX_LEN = 128
+BATCH_SIZE = 32
+EPOCH_SIZE = 3
+OCCUPATION_SIZE = 8
