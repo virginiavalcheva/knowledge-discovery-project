@@ -1,5 +1,4 @@
-import io, numpy as np
-from sklearn import svm
+from sklearn.linear_model import LogisticRegression
 from data_processor import vectorize, label
 
 def classify(train_user_ids, train_user_tweets, test_user_ids, test_user_tweets, trait):
@@ -8,16 +7,18 @@ def classify(train_user_ids, train_user_tweets, test_user_ids, test_user_tweets,
     trait_train = []
     for id in train_user_ids:
         trait_train.append(mapped_ids_to_trait.get(id))
+    print(trait_train)
 
     trait_test = []
     for id in test_user_ids:
         trait_test.append(mapped_ids_to_trait.get(id))
 
+    print(trait_test)
+
     train_data_tfidf, test_data_tfidf = vectorize(train_user_tweets, test_user_tweets)
 
-    print("Starting Support Vector Machine classifier")
-    classifier = svm.SVC()
-    classifier.fit(train_data_tfidf, trait_train)
+    print("Starting Logistic Regression classifier")
+    classifier = LogisticRegression().fit(train_data_tfidf, trait_train)
 
     print("Predicting")
     predicted_trait = classifier.predict(test_data_tfidf)

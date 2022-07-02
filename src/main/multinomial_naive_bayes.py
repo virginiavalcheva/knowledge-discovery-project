@@ -1,5 +1,5 @@
 import io, numpy as np
-from sklearn import svm
+from sklearn.naive_bayes import MultinomialNB
 from data_processor import vectorize, label
 
 def classify(train_user_ids, train_user_tweets, test_user_ids, test_user_tweets, trait):
@@ -15,11 +15,12 @@ def classify(train_user_ids, train_user_tweets, test_user_ids, test_user_tweets,
 
     train_data_tfidf, test_data_tfidf = vectorize(train_user_tweets, test_user_tweets)
 
-    print("Starting Support Vector Machine classifier")
-    classifier = svm.SVC()
-    classifier.fit(train_data_tfidf, trait_train)
+    print("Starting Multinomial NB classifier")
+    classifier = MultinomialNB().fit(train_data_tfidf, trait_train)
 
     print("Predicting")
     predicted_trait = classifier.predict(test_data_tfidf)
 
     return trait_test, predicted_trait
+
+

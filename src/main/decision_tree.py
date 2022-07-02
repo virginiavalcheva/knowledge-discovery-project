@@ -14,7 +14,7 @@ def classify(train_user_ids, train_user_tweets, test_user_ids, test_user_tweets,
 
     train_data_tfidf, test_data_tfidf = vectorize(train_user_tweets, test_user_tweets)
 
-    print("Starting classifier")
+    print("Starting Desecion Tree classifier")
     classifier = tree.DecisionTreeClassifier()
     classifier.fit(train_data_tfidf, trait_train)
 

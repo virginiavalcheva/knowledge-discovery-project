@@ -14,8 +14,8 @@ def classify(train_user_ids, train_user_tweets, test_user_ids, test_user_tweets,
 
     train_data_tfidf, test_data_tfidf = vectorize(train_user_tweets, test_user_tweets)
 
-    print("Starting classifier")
-    classifier = RandomForestClassifier(max_depth=2, random_state=0)
+    print("Starting Random Forest classifier")
+    classifier = RandomForestClassifier(max_depth=5000, random_state=0)
     classifier.fit(train_data_tfidf, trait_train)
 
     print("Predicting")

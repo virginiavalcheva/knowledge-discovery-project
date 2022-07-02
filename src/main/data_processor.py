@@ -1,9 +1,51 @@
 import io
-import pandas as pd 
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer, TfidfTransformer
 from file_reader import decodeFile
 from constants import LABELS_FILENAME
+
+def mapIdToGender(mapped_ids_to_trait):
+    for key, value in mapped_ids_to_trait.items():
+        if value == 'female':
+            mapped_ids_to_trait[key] = 0
+        if value == 'male':
+            mapped_ids_to_trait[key] = 1
+        if value == 'nonbinary':
+            mapped_ids_to_trait[key] = 2
+
+def mapIdToBirtyearInterval(mapped_ids_to_trait):
+    for key, value in mapped_ids_to_trait.items():
+        if 2000 < value <= 2012:
+            mapped_ids_to_trait[key] = 0
+        if 1988 < value <= 2000:
+            mapped_ids_to_trait[key] = 1
+        if 1976 < value <= 1988:
+            mapped_ids_to_trait[key] = 2
+        if 1964 < value <= 1976:
+            mapped_ids_to_trait[key] = 3
+        if 1952 < value <= 1964:
+            mapped_ids_to_trait[key] = 4
+        if 1940 <= value <= 1952:
+            mapped_ids_to_trait[key] = 5
+
+def mapIdToOccupation(mapped_ids_to_trait):
+    for key, value in mapped_ids_to_trait.items():
+        if value == 'sports':
+            mapped_ids_to_trait[key] = 0
+        if value == 'performer':
+            mapped_ids_to_trait[key] = 1
+        if value == 'creator':
+            mapped_ids_to_trait[key] = 2
+        if value == 'politics':
+            mapped_ids_to_trait[key] = 3
+        if value == 'manager':
+            mapped_ids_to_trait[key] = 4
+        if value == 'science':
+            mapped_ids_to_trait[key] = 5
+        if value == 'professional':
+            mapped_ids_to_trait[key] = 6
+        if value == 'religious':
+            mapped_ids_to_trait[key] = 7
 
 def label(trait):
     print("Labeling data based on given trait")
@@ -12,6 +54,14 @@ def label(trait):
 
     for line in decodeFile(resource_as_file):
         mapped_ids_to_trait[line['id']] = line[trait]
+
+    if trait == 'gender':
+        mapIdToGender(mapped_ids_to_trait)
+    elif trait == 'birthyear':
+        mapIdToBirtyearInterval(mapped_ids_to_trait)
+    elif trait == 'occupation':
+        mapIdToOccupation(mapped_ids_to_trait)
+
     return mapped_ids_to_trait
 
 def vectorize(train_user_tweets, test_user_tweets):

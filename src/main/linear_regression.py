@@ -14,10 +14,11 @@ def classify(train_user_ids, train_user_tweets, test_user_ids, test_user_tweets,
 
     train_data_tfidf, test_data_tfidf = vectorize(train_user_tweets, test_user_tweets)
 
-    print("Starting classifier")
-    classifier = LinearRegression().fit(train_data_tfidf, trait_train)
+    print("Starting Linear Regression classifier")
 
+    classifier = LinearRegression(fit_intercept=False).fit(train_data_tfidf, trait_train)
     print("Predicting")
     predicted_trait = classifier.predict(test_data_tfidf)
+    predicted_trait = [int(year) for year in predicted_trait]
 
     return trait_test, predicted_trait
