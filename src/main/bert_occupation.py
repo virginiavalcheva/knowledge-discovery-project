@@ -13,6 +13,7 @@ from tqdm import tqdm, trange
 from celebrity_creator import get_pre_processed_celebrities
 from sklearn.metrics import f1_score
 from constants import MAX_LEN, BATCH_SIZE, EPOCH_SIZE, OCCUPATION_SIZE
+from evaluator import evaluateGenderPredictions
 
 df = get_pre_processed_celebrities()
 
@@ -24,14 +25,13 @@ def get_tweets(df):
 
 tweets = get_tweets(df)  
 
-#get occupations
-def get_labels(df):
-    labels=df[3].values
-    labels=[int(label) for label in labels]
-    return labels
-    
-labels = get_labels(df)
+#get occupation
+def get_occupation(df):
+    occupations=df[3].values
+    occupations=[int(occupation) for occupation in occupations]
+    return occupations
 
+labels = get_occupation(df)
 tokenizer = BertTokenizer.from_pretrained("bert-base-uncased", do_lower_case=True)
 tokenized_texts = [tokenizer.tokenize(tweet) for tweet in tweets]
 #set the text size due to resoled in an error: Token indices sequence length is longer than the specified maximum  sequence length for this BERT model (71969 > 512)
@@ -52,15 +52,16 @@ attention_masks = create_attention_masks()
 
 #use train_test_split to split our data into train and validation sets for training
 train_inputs, test_inputs, train_labels, test_labels = train_test_split(input_ids, labels, 
-                                                            random_state=2013, test_size=0.03)
+                                                            random_state=2022, test_size=0.03)
+  
 train_masks, test_masks, _, _ = train_test_split(attention_masks, input_ids,
-                                             random_state=2012, test_size=0.03)
+                                             random_state=2022, test_size=0.03)
 
 train_masks, validation_masks, _, _ = train_test_split(train_masks, train_inputs,
-                                             random_state=2012, test_size=0.03)
+                                             random_state=2022, test_size=0.03)
 
 train_inputs, validation_inputs, train_labels, validation_labels = train_test_split(train_inputs, train_labels, 
-                                                            random_state=2012, test_size=0.03)                                                       
+                                                            random_state=2022, test_size=0.03)                                                       
                                                        
 #convert the data into torch tensors(the required datatype)
 train_inputs = torch.tensor(train_inputs)
@@ -126,17 +127,12 @@ def tracking_variables(nb_tr_examples, nb_tr_steps):
         tr_loss += loss.item()
         nb_tr_examples += batch_input_ids.size(0)
         nb_tr_steps += 1
-    print("Train loss: {}".format(tr_loss/nb_tr_steps))
+    #print("Train loss: {}".format(tr_loss/nb_tr_steps))
     return nb_tr_examples, nb_tr_steps
     
-def f1_macro(preds, labels):
-    pred_flat = np.argmax(preds, axis=1).flatten()
-    labels_flat = labels.flatten()
-    return f1_score(pred_flat, labels_flat, average='macro')
-    
 def evaluate_data_for_epoch():
-    F1_score = 0.0
-    nb_eval_steps = 0
+    current_result = 0.0
+    step = 0
     for batch in validation_dataloader:
         # Add batch to GPU
         batch = tuple(t.to(device) for t in batch)
@@ -149,26 +145,15 @@ def evaluate_data_for_epoch():
 
         # Move logits and labels to CPU
         logits = logits.detach().cpu().numpy()
-        label_ids = batch_labels.to('cpu').numpy()
-        f1 = f1_macro(logits, label_ids)
-        F1_score+=f1
-        nb_eval_steps += 1
-        
-    print("F1 score(macro): {}".format(F1_score/nb_eval_steps))
+        label_ids = batch_labels.to('cpu').numpy().flatten()
+        predicted_data = np.argmax(logits, axis=1).flatten()
+        evaluateOccupationPredictions(label_ids, predicted_data)
 
 def BERT_occupation():
     for epoch in trange(EPOCH_SIZE, desc="Epoch"):
         model.train()
-        tr_loss = 0
         nb_tr_examples, nb_tr_steps = 0,0
-        tracking_variables(nb_tr_examples, nb_tr_steps)
-      
+        #tracking_variables(nb_tr_examples, nb_tr_steps)
         # Put model in evaluation mode to evaluate loss on the validation set
         model.eval()
-    
         evaluate_data_for_epoch()
-        
-        
-
-BERT_occupation() 
-

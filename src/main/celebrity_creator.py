@@ -4,9 +4,7 @@ from file_reader import decodeFile, read_resource_from_file
 from data_processor import birthyear_pre_processing, occupation_pre_processing, gender_pre_processing
 from constants import FEEDS_FILENAME, TRAIN_UPPER_LIMIT_DATA, LABELS_FILENAME
 
-tweet=[]
-ids=[]
-read_resource_from_file(FEEDS_FILENAME, ids, tweet, 0, TRAIN_UPPER_LIMIT_DATA)
+ids, tweet = read_resource_from_file(FEEDS_FILENAME, 0, TRAIN_UPPER_LIMIT_DATA)
 
 # (id->0, birthyear->1, gender->2, occupation->3, text->4)
 def create_celebrities():
@@ -18,7 +16,7 @@ def create_celebrities():
                 entry=(line['id'], line['birthyear'], line['gender'], line['occupation'], tweet[id_])
                 entries.append(entry)
     df = pd.DataFrame(entries)
-    df.to_csv("celebrity_profiling_training-dataset.csv") 
+    #df.to_csv("celebrity_profiling_training-dataset.csv") 
     #print(df.shape)
     return df
 

@@ -20,5 +20,23 @@ def printMetrics(test_data_ids, predicted_data_ids):
     print("Recall Score Macro: ", recall_score(test_data_ids, predicted_data_ids, average="macro"))
     score = f1_score(test_data_ids, predicted_data_ids, average="macro")
     print("F1 Score Macro: ", score)
+    
+    return score
+
+def evaluateGenderPredictions(test_data, predicted_data):
+    #test_data_ids = mapIdToGender(test_data)
+    #predicted_data_ids = mapIdToGender(predicted_data)
+
+    return printMetrics(test_data, predicted_data)
+
+def evaluateOccupationPredictions(test_data, predicted_data):
+    test_data_ids = mapIdToOccupation(test_data)
+    predicted_data_ids = mapIdToOccupation(predicted_data)
+
+    return printMetrics(test_data_ids, predicted_data_ids)
+
+def evaluateBirthyearPredictions(test_data, predicted_data):
+    test_data_ids = mapIdToBirtyear(test_data)
+    predicted_data_ids = mapIdToBirtyear(predicted_data)
 
     return score

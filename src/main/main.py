@@ -5,6 +5,11 @@ import multinomial_naive_bayes as nb, support_vector_machine as svm, \
     logistic_regression as log_r, bernoulli_naive_bayes as ber_nb
 import evaluator as ev
 from enum import Enum
+import naive_bayes as nb, support_vector_machine as svm
+from celebrity import getCelebrities
+from bert_occupation import BERT_occupation()
+from bert_gender import BERT_gender()
+from bert_birthyear import BERT_birthyear()
 
 class Trait(Enum):
     BIRTHYEAR = 'birthyear'
@@ -62,6 +67,18 @@ def main():
 
     cRank = 3 / ((1 / f1_occupation) + (1 / f1_gender) + (1 / f1_birthyear))
     print("cRank: ", cRank)
+
+    print("Starting BERT model - BIRTHYEAR")
+    BERT_birthyear()
+    print("---------------------------------------------------------------------------\n")
+    
+    print("Starting BERT model - GENDER")
+    BERT_gender()
+    print("---------------------------------------------------------------------------\n")
+    
+    print("Starting BERT model - OCCUPATION")
+    BERT_occupation()
+    print("---------------------------------------------------------------------------\n")
 
 if __name__ == "__main__":
     main()
